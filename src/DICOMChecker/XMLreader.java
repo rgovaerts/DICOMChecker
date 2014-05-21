@@ -161,10 +161,14 @@ public static void main(String argv[]) {
         
         ArrayList listOfRefs = searchReferenceXML(modalityTable, doc);      //listes des références des tables de l'annexe C de chaque module de la modalité
         System.out.println(listOfRefs);
+        ArrayList listOfTagsAndType = new ArrayList();
         for(int i = 0; i < listOfRefs.size(); i++){
-            ArrayList listOfTagsAndType = tagsAndTypeGrab((String) listOfRefs.get(i), doc);
-            System.out.println(listOfTagsAndType);
-            System.out.println(listOfTagsAndType.size());
+            listOfTagsAndType.add(tagsAndTypeGrab((String) listOfRefs.get(i), doc));
+            
+        }
+        for(int i = 0; i<listOfTagsAndType.size(); i++){
+            System.out.println(listOfTagsAndType.get(i));
+            
         }
         
         
