@@ -85,9 +85,9 @@ public class XMLreader {
                 String type = paraListType.item(0).getTextContent();
                 
                 ArrayList field = new ArrayList();
-                
-                field.add(0, attributeName);
-                field.add(1, tag);
+              
+                field.add(0, tag);
+                field.add(1, attributeName);
                 field.add(2, type);
 
                 listOfTags.add(field);
