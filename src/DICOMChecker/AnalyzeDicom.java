@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class AnalyzeDicom {
     
     private ArrayList<ArrayList<String>> DBFields;
+    private ArrayList missingInfo;
     
     public boolean getDB(String modalite)
     {
@@ -70,30 +71,54 @@ public class AnalyzeDicom {
         
     }
     
-    public void compareList(ArrayList<ArrayList<String>> fields)
+    public boolean compareList(ArrayList<ArrayList<String>> fields)
     {
-        int j = 0;
-        for(int i=0;i<DBFields.size();i++ )
+        
+        for(int i=0;i<DBFields.size();i++ ) //on cherche dans la db un champs obligatoire
         {
-            if(Integer.parseInt(DBFields.get(i).get(4)) == 1) // si c'est obligatoire
-            {
-                while(compare(fields.get(j), DBFields.get(i)))
+            
+            ArrayList temp1 = DBFields.get(i);
+            for(int k=0;k<temp1.size();k++ ){
+                ArrayList temp2 = (ArrayList) temp1.get(k); 
+                if(temp2.get(2).equals("1")) // si c'est un champ obligatoire
                 {
-                    if(j < fields.size()-1) j++;
+                    int j = 0;
+                    ArrayList<String> field = fields.get(j);
+                    //ArrayList<String> DBField = DBFields.get(i);
+                    
+                    
+                    while(!(field.get(0).equals(temp2.get(0)))) //tant que les tags ne sont pas les memes on cherche dans le dicom
+                    {
+                        
+                        System.out.println(field.get(0));
+                        System.out.println(temp2.get(0));
+                        if(j < fields.size()-1){
+                            j++;
+                            field = fields.get(j);
+                        }
+                        else{
+                            this.missingInfo = temp2;
+                            return false;
+                        }//si on parcours le dicom entier sans succes
+                    }
+                    System.out.println("ok----------------------------");
+                    
                 }
             }
         }
+        return true;
     }
-    
+    /*
     private boolean compare(ArrayList<String> field, ArrayList<String> DBField)
     {
         if(field.get(0).equals(DBField.get(0))) // si les tag sont les memes
-        // etc
         {
-            
+            return true;
         }
         return false;
     }
+     * 
+     */
         
     private void addToDataBaseXML(String data,String data1)
     {
@@ -186,6 +211,15 @@ public class AnalyzeDicom {
     {
             return DBFields;
 
+    }
+    
+    public void setDBFields(ArrayList<ArrayList<String>> DBFields)
+    {
+        this.DBFields = DBFields;
+    }
+    
+    public ArrayList getMissingInfo(){
+        return this.missingInfo;
     }
 }
     

@@ -2,6 +2,7 @@ package DICOMChecker;
 
 import com.pixelmed.dicom.*;
 import com.pixelmed.display.SourceImage;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,10 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.text.BadLocationException;
 //import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -31,6 +36,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private ArrayList fields;
     private AnalyzeDicom verifDB;
     private XMLreader xmlr;
+    
     /**
      * Creates new form NewJFrame
      */
@@ -57,10 +63,13 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextPane2 = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Load Dicom File");
+        jButton1.setText("Load DICOM File");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -91,7 +100,16 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Liste des champs obligatoires");
+        jLabel2.setText("Liste des champs obligatoires pour la modailté : -No DICOM loaded-");
+
+        jButton3.setText("Check DICOM");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
+
+        jScrollPane3.setViewportView(jTextPane2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,20 +120,27 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(316, 316, 316)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(136, 136, 136))
+                        .addComponent(jLabel2)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 585, Short.MAX_VALUE)
+                                .addComponent(jLabel3))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3)
+                                .addGap(340, 340, 340))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -123,19 +148,23 @@ public class NewJFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(472, 472, 472))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jButton2)
+                                    .addComponent(jButton1)
+                                    .addComponent(jButton3)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)))
                 .addContainerGap())
@@ -145,35 +174,49 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        // Load DICOM file
         JFileChooser chooser = new JFileChooser();
-
         int returnVal = chooser.showOpenDialog(this);
-
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             
             OpenFile(chooser.getSelectedFile());
-
-            verifDB = new AnalyzeDicom();
-            verifDB.getDB(getModality());
-            System.out.println(getModality());
-            System.out.println(Attribute.getSingleStringValueOrEmptyString(dicomList, dicomList.firstKey()));
-            dicomToArray();
+            try {
+                //System.out.println(getModality());
+                //System.out.println(Attribute.getSingleStringValueOrEmptyString(dicomList, dicomList.firstKey()));
+                dicomToArray();
+            } catch (DicomException ex) {
+                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             jTextPane1.setText(dicomList.toString());
+            jLabel1.setText("Dicom Loaded");
+            jLabel2.setText("Liste des champs obligatoires pour la modailté : "+ getModality());
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
 private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
+    // Load XML to DB
     this.xmlr = new XMLreader();
-    //System.out.print(this.xmlr.getListOfTagsAndType().getClass());
-    this.setTableau();
-}//GEN-LAST:event_jButton2ActionPerformed
-    
+    // La ligne suivante est commentée car la DB était temporaire
+    //this.verifDB.addToDataBaseTest(xmlr.getListOfTagsAndType());
+    verifDB = new AnalyzeDicom();
+    //chercher la modailté dans la db
+    //verifDB.getDB(getModality());
+    this.verifDB.setDBFields(xmlr.getListOfTagsAndType()); // on donne Au AnalyzeDicom la liste des champs, car il n'a pas pu aller les chercher dans la DB
 
-    public void dicomToArray()
+    this.setTableau();
+    this.jTextPane2.setText(xmlr.getListOfTagsAndType().toString());
+}//GEN-LAST:event_jButton2ActionPerformed
+
+private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+    //Check DICOM
+    if(fields != null)
+        setLabel(this.verifDB.compareList(fields));
+}//GEN-LAST:event_jButton3MouseClicked
+  
+
+    public void dicomToArray() throws DicomException
     {
         AttributeTag tempTag;
         Attribute tempAtt;
@@ -181,6 +224,9 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         String VM;
         String VR;
         String Tag;
+        
+        //add ID to dicomlist for testing purpose
+        dicomList.putNewAttribute(new AttributeTag("(0x0010,0x0022)"));
         
         fields = new ArrayList();
         tempTag = dicomList.firstKey();
@@ -231,7 +277,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
     
     public void setTableau(){//ArrayList<ArrayList<String>> tableau) {
-        jLabel2.setText("liste des champs obligatoires pour la modalité " );//+ getModality());
+        
         ArrayList tableau = this.xmlr.getListOfTagsAndType();
         for(int i=0; i<tableau.size();i++){
             if(tableau.get(i) != null){
@@ -240,8 +286,9 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                     
                     //affichage d'un tableau directement du xml
                     //mettre le resultat de la requete SQL ici
+                    //bug de taille de table pour l'instant d'ou les breaks
                     
-                    
+                    /*
                     for(int j=0; j<tempTable.size();j++){
                         ArrayList tempTableLine = (ArrayList) tempTable.get(j);
                         String tag = (String) tempTableLine.get(0);
@@ -250,9 +297,12 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                         jTable1.setValueAt(keyword, j, 1);
                         String VR = (String) tempTableLine.get(2);
                         jTable1.setValueAt(VR, j, 2);
+                        
                         if(j>2) break;
                     }
-                    break;
+                 * 
+                 */
+
                 }
                 
             }
@@ -267,7 +317,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             jLabel1.setText("Format du fichier Dicom correct");
         }
         else{
-            jLabel1.setText("Format du fichier Dicom incorrect");
+            jLabel1.setText("Format du fichier Dicom incorrect : " + this.verifDB.getMissingInfo().toString() + "non trouvé");
         }
     }
     /**
@@ -314,12 +364,15 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTextPane jTextPane2;
     // End of variables declaration//GEN-END:variables
 }

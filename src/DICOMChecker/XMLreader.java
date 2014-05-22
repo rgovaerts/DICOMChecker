@@ -37,10 +37,12 @@ public class XMLreader {
             //System.out.println("----------------------------");
             //NodeList nListChapter = doc.getElementsByTagName("chapter"); 
 
-            // parcours l'annexe A du xml pour récupérer la liste des références des modules pour la modalité A.2.3
+            // parcours l'annexe A du xml pour récupérer la liste des 
+            // références des modules pour la modalité A.3.3 
+            // (CT Image IOD Module Table)
 
-            String modalityTable = "A.2.3";      //Pas encore utilisé à cause du bug des "."
 
+            String modalityTable = "A.3.3";      
             ArrayList listOfRefs = searchReferenceXML(modalityTable, doc);      //listes des références des tables de l'annexe C de chaque module de la modalité
             //System.out.println(listOfRefs);
             this.listOfTagsAndType = new ArrayList();
