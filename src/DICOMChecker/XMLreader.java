@@ -33,8 +33,8 @@ public class XMLreader {
             //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             doc.getDocumentElement().normalize();
 
-            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-            System.out.println("----------------------------");
+            //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            //System.out.println("----------------------------");
             //NodeList nListChapter = doc.getElementsByTagName("chapter"); 
 
             // parcours l'annexe A du xml pour récupérer la liste des références des modules pour la modalité A.2.3
@@ -42,13 +42,14 @@ public class XMLreader {
             String modalityTable = "A.2.3";      //Pas encore utilisé à cause du bug des "."
 
             ArrayList listOfRefs = searchReferenceXML(modalityTable, doc);      //listes des références des tables de l'annexe C de chaque module de la modalité
-            System.out.println(listOfRefs);
+            //System.out.println(listOfRefs);
             this.listOfTagsAndType = new ArrayList();
             for(int i = 0; i < listOfRefs.size(); i++){
                 this.listOfTagsAndType.add(tagsAndTypeGrab((String) listOfRefs.get(i), doc));
 
             }
             /*
+             * DEBUG
             for(int i = 0; i<this.listOfTagsAndType.size(); i++){
                 System.out.println(this.listOfTagsAndType.get(i));
 
@@ -68,8 +69,12 @@ public class XMLreader {
             if (chapterNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element chapter = (Element) chapterNode;
                 if (chapter.getAttribute("xml:id").equals(address)){
+                    /*
+                     * DEBUG
                     System.out.println("Chapter id : " + chapter.getAttribute("xml:id"));
                     System.out.println("----------------------------");
+                     * 
+                     */
                     break;
                 }
             }
@@ -96,7 +101,7 @@ public class XMLreader {
         ArrayList listOfTags = new ArrayList();
         
         String[] parts = ref.split("\\.");
-        System.out.println(parts[0]);
+        //System.out.println(parts[0]);
         Node myNodeC = searchXML(doc.getFirstChild(), "chapter_C");
         String totParts = new String("");
         for(int i = 1; i<parts.length; i++){
@@ -107,8 +112,12 @@ public class XMLreader {
         myNodeC = searchXMLTag(myNodeC, "table");
         
         Element tbody = (Element) searchXMLTag(myNodeC, "tbody");
+        /*
+         * DEBUG
         System.out.println(tbody.getTagName());
         System.out.println("----------------------------");
+         * 
+         */
         
         NodeList trList = tbody.getElementsByTagName("tr");
         for (int temp = 0; temp < trList.getLength(); temp++){      //boucle sur les tr du tbody
@@ -152,10 +161,14 @@ public class XMLreader {
             myNodeA = searchXML(myNodeA, "sect_A" + totParts);
         }
         myNodeA = searchXMLTag(myNodeA, "table");
-        System.out.print(myNodeA.getNodeValue());
+        //System.out.print(myNodeA.getNodeValue());
         Element tbody = (Element) searchXMLTag(myNodeA, "tbody");
+        /*
+         * DEBUG
         System.out.println(tbody.getTagName());
         System.out.println("----------------------------");
+         * 
+         */
         
         NodeList trList = tbody.getElementsByTagName("tr");
         for (int temp = 0; temp < trList.getLength(); temp++){      //boucle sur les tr du tbody

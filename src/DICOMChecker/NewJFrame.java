@@ -2,6 +2,7 @@ package DICOMChecker;
 
 import com.pixelmed.dicom.*;
 import com.pixelmed.display.SourceImage;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -230,26 +231,35 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
     
     public void setTableau(){//ArrayList<ArrayList<String>> tableau) {
-        jLabel2.setText("liste des champs obligatoires pour la modalité " + getModality());
+        jLabel2.setText("liste des champs obligatoires pour la modalité " );//+ getModality());
         ArrayList tableau = this.xmlr.getListOfTagsAndType();
         for(int i=0; i<tableau.size();i++){
-            if(tableau.get(i) != null)
-                System.out.print(tableau.get(i).getClass());
+            if(tableau.get(i) != null){
+                ArrayList tempTable = (ArrayList) tableau.get(i); //casting nécéssaire a cause arraylist d'arraylist
+                if(tempTable.size() > 0){ //pour filtrer les tableaux vides
+                    
+                    //affichage d'un tableau directement du xml
+                    //mettre le resultat de la requete SQL ici
+                    
+                    
+                    for(int j=0; j<tempTable.size();j++){
+                        ArrayList tempTableLine = (ArrayList) tempTable.get(j);
+                        String tag = (String) tempTableLine.get(0);
+                        jTable1.setValueAt(tag, j, 0);
+                        String keyword = (String) tempTableLine.get(1);
+                        jTable1.setValueAt(keyword, j, 1);
+                        String VR = (String) tempTableLine.get(2);
+                        jTable1.setValueAt(VR, j, 2);
+                        if(j>2) break;
+                    }
+                    break;
+                }
+                
+            }
+                
+                
+                        
         }
-        
-        /*
-        for(int i=0; i<tableau.size();i++){
-            String tag = (String)tableau.get(i).get(0);
-            jTable1.setValueAt(tag, i, 0);
-            String keyword = (String)tableau.get(i).get(1);
-            jTable1.setValueAt(keyword, i, 1);
-            String VR = (String)tableau.get(i).get(2);
-            jTable1.setValueAt(VR, i, 2);
-            String VM = (String)tableau.get(i).get(3);
-            jTable1.setValueAt(tag, i, 3);            
-        }
-         * 
-         */
     }
     
     public void setLabel(boolean result){
