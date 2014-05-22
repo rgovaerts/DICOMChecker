@@ -14,7 +14,51 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
  
 public class XMLreader {
-    //---------------------------------------------------------------------------------------------------------------------------------------------- 
+    
+    private ArrayList listOfTagsAndType;
+    
+    public ArrayList getListOfTagsAndType(){
+        return this.listOfTagsAndType;
+    }
+    
+    public XMLreader(){
+        try {
+            //D:/Users/INFO-H-400\Desktop\DICOMChecker-master\src\DICOMChecker\DocBookDICOM2013_docbook_20140430202104\source\docbook\part03
+            File fXmlFile = new File("/home/remy/NetBeansProjects/DICOMChecker/src/DICOMChecker/DocBookDICOM2013_docbook_20140430202104/source/docbook/part03/part03.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = (Document) dBuilder.parse(fXmlFile);
+
+            //optional, but recommended
+            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            doc.getDocumentElement().normalize();
+
+            System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+            System.out.println("----------------------------");
+            //NodeList nListChapter = doc.getElementsByTagName("chapter"); 
+
+            // parcours l'annexe A du xml pour récupérer la liste des références des modules pour la modalité A.2.3
+
+            String modalityTable = "A.2.3";      //Pas encore utilisé à cause du bug des "."
+
+            ArrayList listOfRefs = searchReferenceXML(modalityTable, doc);      //listes des références des tables de l'annexe C de chaque module de la modalité
+            System.out.println(listOfRefs);
+            this.listOfTagsAndType = new ArrayList();
+            for(int i = 0; i < listOfRefs.size(); i++){
+                this.listOfTagsAndType.add(tagsAndTypeGrab((String) listOfRefs.get(i), doc));
+
+            }
+            /*
+            for(int i = 0; i<this.listOfTagsAndType.size(); i++){
+                System.out.println(this.listOfTagsAndType.get(i));
+
+            }
+             * */
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public static Node searchXML(Node n, String address){
         NodeList nList = n.getChildNodes();
         int temp = 0;
@@ -136,45 +180,4 @@ public class XMLreader {
         }
         return listOfReferences;
     }        
- //---------------------------------------------------------------------------------------------------------------------------------------------- 
-public static void main(String argv[]) {
-
-    
-    try {
-        //D:/Users/INFO-H-400\Desktop\DICOMChecker-master\src\DICOMChecker\DocBookDICOM2013_docbook_20140430202104\source\docbook\part03
-	File fXmlFile = new File("/home/remy/NetBeansProjects/DICOMChecker/src/DICOMChecker/DocBookDICOM2013_docbook_20140430202104/source/docbook/part03/part03.xml");
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	Document doc = dBuilder.parse(fXmlFile);
- 
-	//optional, but recommended
-	//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-	doc.getDocumentElement().normalize();
- 
-	System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-        System.out.println("----------------------------");
-	//NodeList nListChapter = doc.getElementsByTagName("chapter"); 
-	
-        // parcours l'annexe A du xml pour récupérer la liste des références des modules pour la modalité A.2.3
-        
-        String modalityTable = "A.2.3";      //Pas encore utilisé à cause du bug des "."
-        
-        ArrayList listOfRefs = searchReferenceXML(modalityTable, doc);      //listes des références des tables de l'annexe C de chaque module de la modalité
-        System.out.println(listOfRefs);
-        ArrayList listOfTagsAndType = new ArrayList();
-        for(int i = 0; i < listOfRefs.size(); i++){
-            listOfTagsAndType.add(tagsAndTypeGrab((String) listOfRefs.get(i), doc));
-            
-        }
-        for(int i = 0; i<listOfTagsAndType.size(); i++){
-            System.out.println(listOfTagsAndType.get(i));
-            
-        }
-        
-        
-    } catch (Exception e) {
-	e.printStackTrace();
-    }
-  }
- //---------------------------------------------------------------------------------------------------------------------------------------------- 
-}
+ }
