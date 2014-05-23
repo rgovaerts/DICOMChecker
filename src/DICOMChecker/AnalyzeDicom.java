@@ -89,9 +89,12 @@ public class AnalyzeDicom {
                     
                     while(!(field.get(0).equals(temp2.get(0)))) //tant que les tags ne sont pas les memes on cherche dans le dicom
                     {
-                        
+                        /*
+                         * DEBUG
                         System.out.println(field.get(0));
                         System.out.println(temp2.get(0));
+                         * 
+                         */
                         if(j < fields.size()-1){
                             j++;
                             field = fields.get(j);
@@ -101,24 +104,11 @@ public class AnalyzeDicom {
                             return false;
                         }//si on parcours le dicom entier sans succes
                     }
-                    System.out.println("ok----------------------------");
-                    
                 }
             }
         }
         return true;
     }
-    /*
-    private boolean compare(ArrayList<String> field, ArrayList<String> DBField)
-    {
-        if(field.get(0).equals(DBField.get(0))) // si les tag sont les memes
-        {
-            return true;
-        }
-        return false;
-    }
-     * 
-     */
         
     private void addToDataBaseXML(String data,String data1)
     {
